@@ -11,6 +11,7 @@ export abstract class DataQuery<T> {
     protected abstract fetchData(): Promise<QueryResult<T>>;
 
     async getData() {
+        console.log("getData");
         if (!this.data_promise) {
             this.data_promise = this.fetchData();
         }
@@ -21,16 +22,16 @@ export abstract class DataQuery<T> {
 
 export class DataSourceQuery extends DataQuery<number> {
     protected async fetchData(): Promise<QueryResult<number>> {
-        await sleep(500);
-        console.log("ds data");
+        console.log("DataSourceQuery - fetchData");
+        await sleep(5000);
         return { data: 1 };
     }
 }
 
 export class NativeDataQuery extends DataQuery<string> {
     async fetchData(): Promise<QueryResult<string>> {
-        await sleep(500);
-        console.log("native data");
+        console.log("NativeDataQuery - fetchData");
+        await sleep(5000);
         return { data: "test" };
     }
 }

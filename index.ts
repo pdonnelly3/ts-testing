@@ -7,16 +7,40 @@ import {
 
 const nativeQ = new NativeDataQuery();
 const dsQ = new DataSourceQuery();
-const nativeValidator = new NativeIntegrationValidator(nativeQ, "test");
-const dsValidator = new DataSourceValidator(nativeQ, dsQ, 2);
+const passedNativeValidator = new NativeIntegrationValidator(nativeQ, "test");
+const passedDsValidator = new DataSourceValidator(nativeQ, dsQ, 1);
+const failedNativeValidator = new NativeIntegrationValidator(nativeQ, "native");
+const failedDsValidator = new DataSourceValidator(nativeQ, dsQ, 2);
+const dependentValidator = new DependentNativeValidator(
+    [passedNativeValidator, passedNativeValidator],
+    "one"
+);
 
 const tests = [
-    new DependentNativeValidator([nativeValidator], "one"),
-    new DependentNativeValidator([nativeValidator, dsValidator], "one"),
-    nativeValidator,
-    dsValidator,
+    passedNativeValidator,
+    new DependentNativeValidator([passedNativeValidator], "one"),
+    new DependentNativeValidator([passedDsValidator], "one"),
+    new DependentNativeValidator([dependentValidator], "one"),
+    new DependentNativeValidator(
+        [passedNativeValidator, passedDsValidator],
+        "one"
+    ),
+    passedDsValidator,
+    dependentValidator,
+    new DependentNativeValidator([failedNativeValidator], "one"),
+    new DependentNativeValidator([failedDsValidator], "one"),
+    new DependentNativeValidator(
+        [passedNativeValidator, failedDsValidator],
+        "one"
+    ),
+    failedNativeValidator,
+    failedDsValidator,
 ];
 
 Promise.all(tests.map((t) => t.validate()))
-    .then((res) => console.table(res))
+    .then((res) => {
+        console.log("*********");
+        console.log("Results");
+        console.table(res);
+    })
     .catch((err) => console.error(err));
