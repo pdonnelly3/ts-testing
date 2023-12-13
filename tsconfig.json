@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "disableSourceOfProjectReferenceRedirect": true,
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "incremental": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "outDir": "dist",
+        "target": "es2020"
+    },
+    "lib": ["es2020"]
+}
