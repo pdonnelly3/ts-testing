@@ -2,6 +2,7 @@ import { DataSourceQuery, NativeDataQuery } from "./src/DataQuery";
 import {
     DataSourceValidator,
     DependentNativeValidator,
+    DependentValidatorWithSharedData,
     NativeIntegrationValidator,
 } from "./src/Validator";
 
@@ -19,7 +20,6 @@ const dependentValidator = new DependentNativeValidator(
 const tests = [
     passedNativeValidator,
     new DependentNativeValidator([passedNativeValidator], "one"),
-    new DependentNativeValidator([passedDsValidator], "one"),
     new DependentNativeValidator([dependentValidator], "one"),
     new DependentNativeValidator(
         [passedNativeValidator, passedDsValidator],
@@ -28,13 +28,17 @@ const tests = [
     passedDsValidator,
     dependentValidator,
     new DependentNativeValidator([failedNativeValidator], "one"),
-    new DependentNativeValidator([failedDsValidator], "one"),
     new DependentNativeValidator(
         [passedNativeValidator, failedDsValidator],
         "one"
     ),
     failedNativeValidator,
     failedDsValidator,
+    new DependentValidatorWithSharedData(
+        [passedNativeValidator, passedDsValidator],
+        "one",
+        nativeQ
+    ),
 ];
 
 Promise.all(tests.map((t) => t.validate()))

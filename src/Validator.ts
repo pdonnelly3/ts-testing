@@ -130,3 +130,36 @@ export class DependentNativeValidator extends ValidatorWithDependencies<string> 
         return this.toValidate === "one";
     }
 }
+
+/** Shows how we can share a DataQuery object to access the information */
+export class DependentValidatorWithSharedData extends ValidatorWithDependencies<string> {
+    static ID_COUNTER = 1;
+    name = "DependentValidatorWithSharedData";
+
+    constructor(
+        protected dependencies: Validator[],
+        protected toValidate: string,
+        private nativeQuery: NativeDataQuery
+    ) {
+        super(dependencies, toValidate);
+        this.id = DependentNativeValidator.ID_COUNTER;
+        DependentNativeValidator.ID_COUNTER += 1;
+    }
+
+    async runTest(): Promise<boolean> {
+        this.printMessage("Running Test");
+
+        if (!(await this.waitForDependencies())) {
+            this.printMessage("Parent Failed");
+            return false;
+        }
+
+        this.printMessage("Parent passed");
+
+        const { data } = await this.nativeQuery.getData();
+
+        this.printMessage(`Dependent got data - ${data}`);
+
+        return this.toValidate === "one";
+    }
+}
