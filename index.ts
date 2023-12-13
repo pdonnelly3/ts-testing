@@ -1,20 +1,20 @@
 import { DataSourceQuery, NativeDataQuery } from "./src/DataQuery";
 import {
-    DataSourceTest,
-    DependentNativeTest,
-    NativeIntegrationTest,
-} from "./src/Test";
+    DataSourceValidator,
+    DependentNativeValidator,
+    NativeIntegrationValidator,
+} from "./src/Validator";
 
 const nativeQ = new NativeDataQuery();
 const dsQ = new DataSourceQuery();
-const nativeTest = new NativeIntegrationTest(nativeQ, "test");
-const dsTest = new DataSourceTest(nativeQ, dsQ, 2);
+const nativeValidator = new NativeIntegrationValidator(nativeQ, "test");
+const dsValidator = new DataSourceValidator(nativeQ, dsQ, 2);
 
 const tests = [
-    new DependentNativeTest([nativeTest], "one"),
-    new DependentNativeTest([nativeTest, dsTest], "one"),
-    nativeTest,
-    dsTest,
+    new DependentNativeValidator([nativeValidator], "one"),
+    new DependentNativeValidator([nativeValidator, dsValidator], "one"),
+    nativeValidator,
+    dsValidator,
 ];
 
 Promise.all(tests.map((t) => t.validate()))

@@ -1,4 +1,4 @@
 import { DataQuery } from "./DataQuery";
-import { Test } from "./Test";
+import { Validator } from "./Validator";
 
-export { DataQuery, Test };
+export { DataQuery, Validator };

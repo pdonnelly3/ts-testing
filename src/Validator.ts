@@ -1,6 +1,6 @@
-import { DataQuery, DataSourceQuery, NativeDataQuery } from "./DataQuery";
+import { DataSourceQuery, NativeDataQuery } from "./DataQuery";
 
-export abstract class Test<ToValidate = unknown> {
+export abstract class Validator<ToValidate = unknown> {
     private _testPromise: Promise<boolean>;
 
     constructor(protected toValidate: ToValidate) {}
@@ -16,8 +16,8 @@ export abstract class Test<ToValidate = unknown> {
     }
 }
 
-export abstract class TestWithDependencies<T = unknown> extends Test<T> {
-    constructor(protected dependencies: Test[], protected toValidate: T) {
+export abstract class ValidatorWithDependencies<T = unknown> extends Validator<T> {
+    constructor(protected dependencies: Validator[], protected toValidate: T) {
         super(toValidate);
     }
 
@@ -29,7 +29,7 @@ export abstract class TestWithDependencies<T = unknown> extends Test<T> {
     }
 }
 
-export class NativeIntegrationTest extends Test<string> {
+export class NativeIntegrationValidator extends Validator<string> {
     constructor(
         private nativeIntegrationQuery: NativeDataQuery,
         protected toValidate: string
@@ -49,7 +49,7 @@ export class NativeIntegrationTest extends Test<string> {
     }
 }
 
-export class DataSourceTest extends Test<number> {
+export class DataSourceValidator extends Validator<number> {
     constructor(
         private nativeIntegrationQuery: NativeDataQuery,
         private dataSourceQuery: DataSourceQuery,
@@ -74,8 +74,8 @@ export class DataSourceTest extends Test<number> {
     }
 }
 
-export class DependentNativeTest extends TestWithDependencies<string> {
-    constructor(protected dependencies: Test[], protected toValidate: string) {
+export class DependentNativeValidator extends ValidatorWithDependencies<string> {
+    constructor(protected dependencies: Validator[], protected toValidate: string) {
         super(dependencies, toValidate);
     }
 
